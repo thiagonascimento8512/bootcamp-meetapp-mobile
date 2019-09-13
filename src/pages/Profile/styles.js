@@ -24,12 +24,12 @@ export const Separator = styled.View`
   margin: 20px 0 30px;
 `;
 
-export const SubmitButton = styled(Button)`
+export const ButtonSubmit = styled(Button)`
   margin-top: 5px;
   background: #e5556e;
 `;
 
-export const LogoutButton = styled(Button)`
+export const ButtonLogout = styled(Button)`
   margin-top: 10px;
   background: #d44059;
 `;
