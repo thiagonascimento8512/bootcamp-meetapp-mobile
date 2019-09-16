@@ -6,7 +6,14 @@ export const Container = styled.View`
   flex: 1;
 `;
 
-export const Meetups = styled.ScrollView.attrs({
+export const NotFound = styled.Text`
+  color: #999;
+  font-size: 20px;
+  align-self: center;
+  font-style: italic;
+`;
+
+export const Meetups = styled.FlatList.attrs({
   showsVerticalScrollIndicators: false,
   contentContainerStyle: { padding: 30 },
 })`

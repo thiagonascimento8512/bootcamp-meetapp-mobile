@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Alert } from 'react-native';
+import { withNavigationFocus } from 'react-navigation';
 
 import { signOut } from '~/store/modules/auth/actions';
 import { updateProfileRequest } from '~/store/modules/user/actions';
@@ -15,7 +15,7 @@ import {
   ButtonLogout,
 } from './styles';
 
-export default function Profile({ navigation }) {
+function Profile({ isFocused }) {
   const dispatch = useDispatch();
   const { profile } = useSelector(state => state.user);
 
@@ -36,7 +36,7 @@ export default function Profile({ navigation }) {
     setOldPassword('');
     setPassword('');
     setConfirmPassword('');
-  }, [profile]);
+  }, [profile, isFocused]);
 
   function handleSubmit() {
     const newProfile = {
@@ -134,3 +134,5 @@ Profile.navigationOptions = {
     <Icon name="person" size={20} color={tintColor} />
   ),
 };
+
+export default withNavigationFocus(Profile);

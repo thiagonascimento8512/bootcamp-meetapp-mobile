@@ -3,7 +3,7 @@ import { all, takeLatest, put, call } from 'redux-saga/effects';
 
 import api from '~/services/api';
 import { updateProfileSuccess } from './actions';
-import { toggleLoading } from '~/store/modules/auth/actions';
+import { toggleLoading, signOut } from '~/store/modules/auth/actions';
 
 export function* updateProfile({ payload }) {
   try {
@@ -23,6 +23,7 @@ export function* updateProfile({ payload }) {
   } catch (error) {
     Alert.alert('Error!', 'Erro ao atualizar o perfil, confira seus dados!');
     yield put(toggleLoading());
+    yield put(signOut());
   }
 }
 
