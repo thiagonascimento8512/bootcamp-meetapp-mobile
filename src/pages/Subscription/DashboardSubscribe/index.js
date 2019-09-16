@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { withNavigationFocus } from 'react-navigation';
@@ -25,37 +25,33 @@ import {
   InscritionButton,
 } from './styles';
 
-function Dashboard({ isFocused, navigation }) {
+function DashboardSubscribe({ isFocused, navigation }) {
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
-  const [date, setDate] = useState(new Date());
   const [meetups, setMeetups] = useState([]);
 
   async function loadMeetups() {
     setLoading(true);
     try {
-      const response = await api.get('meetups', {
-        params: {
-          date,
-        },
-      });
+      const response = await api.get('subscription');
 
       const meets = response.data.map(m => ({
         ...m,
         dateFormated: format(
-          parseISO(m.date),
+          parseISO(m.Meetup.date),
           "dd 'de' MMMM 'de' yyyy, 'às' HH:mm",
           {
             locale: pt,
           }
         ),
       }));
+      console.tron.log(meets);
 
       setMeetups(meets);
     } catch (err) {
       setLoading(false);
-      dispatch(signOut());
+      // dispatch(signOut());
     }
     setLoading(false);
   }
@@ -63,28 +59,28 @@ function Dashboard({ isFocused, navigation }) {
   useEffect(() => {
     loadMeetups();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused, date]);
+  }, [isFocused]);
 
   return (
     <Background>
       <Container>
-        <DateInput date={date} onChange={setDate} />
-
         {meetups[0] ? (
           <Meetups
             refreshing={loading}
             data={meetups}
             onRefresh={loadMeetups}
-            keyExtractor={item => String(item.date)}
+            keyExtractor={item => String(item.Meetup.date)}
             renderItem={({ item }) => (
               <MeetupContainer>
-                <MeetupImage source={{ uri: item.banner.url }} />
+                <MeetupImage source={{ uri: item.Meetup.banner.url }} />
                 <Info>
-                  <Title>{item.title}</Title>
+                  <Title>{item.Meetup.title}</Title>
                   <Details>
                     <DetailText>{item.dateFormated}</DetailText>
-                    <DetailText>{item.location}</DetailText>
-                    <DetailText>Oganizador: {item.organizer.name}</DetailText>
+                    <DetailText>{item.Meetup.location}</DetailText>
+                    <DetailText>
+                      Oganizador: {item.Meetup.organizer.name}
+                    </DetailText>
                   </Details>
                   {item.subscription ? (
                     <DetailText style={{ alignSelf: 'center' }}>
@@ -93,10 +89,10 @@ function Dashboard({ isFocused, navigation }) {
                   ) : (
                     <InscritionButton
                       onPress={() =>
-                        navigation.navigate('ConfirmInscrition', { item })
+                        navigation.navigate('CancelSubscribe', { item })
                       }
                     >
-                      Realizar Inscrição
+                      Cancelar Inscrição
                     </InscritionButton>
                   )}
                 </Info>
@@ -111,7 +107,7 @@ function Dashboard({ isFocused, navigation }) {
               color="#999"
               style={{ alignSelf: 'center', marginTop: 10 }}
             />
-            <NotFound>Não há meetups para esta data</NotFound>
+            <NotFound>Você não fez possui inscrição</NotFound>
           </>
         )}
       </Container>
@@ -119,12 +115,12 @@ function Dashboard({ isFocused, navigation }) {
   );
 }
 
-Dashboard.navigationOptions = {
+DashboardSubscribe.navigationOptions = {
   header: null,
   tabBarLabel: 'Meetups',
   tabBarIcon: ({ tintColor }) => (
-    <Icon name="event" size={20} color={tintColor} />
+    <Icon name="assignment-turned-in" size={20} color={tintColor} />
   ),
 };
 
-export default withNavigationFocus(Dashboard);
+export default withNavigationFocus(DashboardSubscribe);
