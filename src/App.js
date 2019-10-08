@@ -5,9 +5,8 @@ import Background from '~/components/Background';
 import Header from '~/components/Header';
 import createRoutes from './routes';
 
-export default function src() {
+function App() {
   const { signed } = useSelector(state => state.auth);
-
   const Routes = createRoutes(signed);
   return (
     <Background>
@@ -16,3 +15,5 @@ export default function src() {
     </Background>
   );
 }
+
+export default App;
